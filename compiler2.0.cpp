@@ -116,8 +116,11 @@ bool isIdentifier(string s)
 
                 if(c=='#' || c=='<' || c=='>' || c=='?' || c == '-' || c=='+'|| c=='*' || c=='/' || c=='%' || c=='$' || c=='&' || c=='^' || c=='@' || c==',' || c=='.' || c=='(' || c==')' || c=='"' || c==';' || c==':' || c=='|' || c=='=' || c=='!' || c=='`' || c=='[' || c==']' || c=='{' || c=='}' || c=='\\')
                 {
-                    cout<< "Error at index '" << i<<"'. Identifier cannot contain special character. "<<c<<endl;
-                    validity++;
+                    if(!matchPattern(s, ".*;$"))
+                    {
+                        cout<< "Error at index '" << i<<"'. Identifier cannot contain special character. "<<c<<endl;
+                        validity++;
+                    }
                 }
                 if(c == ' ')
                 {
@@ -197,6 +200,20 @@ bool isComplete(string s)
             }
         }
     }
+}
+
+bool isComment(string s)
+{
+    if (matchPattern(s, "//(.*)"))
+    {
+        return true;
+    }
+    else if (matchPattern(s, "/\\*(.*?)"))
+    {
+        return true;
+    }
+    else
+        return false;
 }
 
 int commentCheck(string s)
@@ -300,12 +317,11 @@ bool isStatement(string s)
 
 bool endCheck(string s)
 {
-    if(!matchPattern(s, ".*;$") && s != "" && !isMethod(s) && !matchPattern(s, ".*}$") && isStatement(s) != 0 && commentCheck(s) == 0)
+    if(!matchPattern(s, ".*;$") && s != "" && !isMethod(s) && !matchPattern(s, ".*}$") && isStatement(s) != 0 && isComment(s))
     {
         cout<< "Expected ; at the end";
     }
 }
-
 
 int main ()
 {
@@ -361,7 +377,7 @@ int main ()
             {
                 if(!matchPattern(line, "\\s*\\}\\s*$"))
                 {
-                    cout<< "Invalid Datatype. ";
+                    cout<< "Invalid Keyword. ";
                 }
             }
         }
@@ -369,10 +385,6 @@ int main ()
         commentCheck(line);
         endCheck(line);
         cout<<endl;
-
     }
     MyReadFile.close();
 }
-
-
-
