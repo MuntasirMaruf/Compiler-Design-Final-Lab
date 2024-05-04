@@ -196,6 +196,11 @@ int commentCheck(string s)
 
 bool isIdentifier(string s)
 {
+    string s1, s2, s3;
+    stringstream ss(s);
+    // Extract the first word (token) from the stringstream
+    ss >> s1;
+
     int j =0;
     char c1 = s[0];
     int validity = 0;
@@ -248,7 +253,7 @@ bool isIdentifier(string s)
 
 bool isHeader(string s)
 {
-    if(matchPattern(s, "#include<+[A-Za-z]+>"))
+    if(matchPattern(s, "#include\\s*\\<+[A-Za-z]+>"))
     {
         return true;
     }
@@ -326,21 +331,14 @@ int main ()
     string s;
     string s2;
     string s3;
-    string s4;
-    string s5;
-    //ifstream MyReadFile("codeString.txt");
     ifstream MyReadFile("lex_input.txt");
 
     while (getline(MyReadFile, line))
     {
-        // Use stringstream to tokenize the sentence
         stringstream ss(line);
-        // Extract the first word (token) from the stringstream
         ss >> s;
         ss >> s2;
         ss >> s3;
-        ss >> s4;
-        ss >> s5;
         cout << line << "   ";
         if(isHeader(line)) //identifyintg the header
         {
@@ -372,7 +370,7 @@ int main ()
             }
             else
             {
-                if(!matchPattern(line, "\\s*\\}\\s*$"))
+                if(!matchPattern(line, "\\s*\\}\\s*$") && !isDataType(s) && !isKeyWord(s))
                 {
                     cout<< "Invalid Keyword. ";
                 }
